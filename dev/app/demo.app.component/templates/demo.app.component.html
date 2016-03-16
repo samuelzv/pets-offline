@@ -1,3 +1,5 @@
+<div class="demo-app__header"> <h1>Register Pets</h1> </div>
+
 <div class="demo-app__main">
 
   <div class="demo-app__main__add-pet">
@@ -26,13 +28,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Bethoven</td>
-          <td>Dog</td>
-        </tr>
-        <tr>
-          <td>Gardfield</td>
-          <td>Cat</td>
+        <tr *ngFor="#item of state.pets;">
+          <td>{{item.name}}</td>
+          <td>{{item.kind}}</td>
         </tr>
       </tbody>
     </table>

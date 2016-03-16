@@ -15,9 +15,9 @@ export class PetsApiService {
     this._http = http;
   }
 
-  getPet() {
+  getPets() {
     return this._http
-      .get(API_PATH + 'pet')
+      .get(API_PATH + 'pets')
       .map(res => res.json())
       .share();
   }

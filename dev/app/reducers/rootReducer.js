@@ -1,10 +1,9 @@
 import * as NetworkStatusActions from  '../actions/networkStatusActions';
-import * as ShapeActions from '../actions/shapeActions';
+import * as PetActions from '../actions/petActions';
 
 
 const initialState = {
-  todos: [],
-  shapes: [],
+  pets: [],
   networkStatus: 'online'
 };
 
@@ -14,17 +13,13 @@ export function rootReducer(state = initialState, action) {
 
     case NetworkStatusActions.SET_STATUS:
       return {
-        todos: state.todos,
+        pets: state.pets,
         networkStatus: action.status
       };
 
-    case ShapeActions.ADD_SHAPE:
-
+    case PetActions.LOAD_PETS:
       return {
-        shapes: state.shapes.concat({
-          shape: action.shape
-        }),
-        todos: state.todos,
+        pets : action.pets,
         networkStatus: state.networkStatus
       };
 
