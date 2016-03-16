@@ -1,9 +1,0 @@
-<form>
-    <h2>Survey</h2>
-    <label>Are you planning to visit again the restaurant?</label>
-    <input type="text" (keyup)="0" #inputAnswer placeholder="yes/not"/>
-    <p [style.visibility]="inputAnswer.value ==='yes' ? 'visible': 'hidden'">Thanks for your preference.</p>
-    <p [style.visibility]="inputAnswer.value ==='not'  ? 'visible': 'hidden'">Thanks, We'll try to improve</p>
-    <br>
-    <br>
-</form>

@@ -1,12 +1,12 @@
 import {Component} from 'angular2/core';
-import {DemoSurveyComponent} from '../demo.survey.component/demo.survey.component';
+import {DemoMainComponent} from '../demo.main.component/demo.main.component';
 import {DemoHeaderComponent} from '../demo.header.component/demo.header.component';
 
 @Component({
-  directives:[DemoSurveyComponent, DemoHeaderComponent],
+  directives:[DemoMainComponent, DemoHeaderComponent],
   selector: 'demo-app',
   template: `
-    <demo-header></demo-header>
+    <div class="demo-app__header"> <h1>Register Pets</h1> </div>
     <demo-main></demo-main>
   `
 })

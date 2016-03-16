@@ -14,9 +14,19 @@ function defaultTranspilerTask() {
   return  DEFAULT_TRANSPILER === 'traceur' ? 'js-traceur' : 'js-babel';
 }
 
+gulp.task('cssDependencies', () => {
+
+  var libraries = [
+    'node_modules/bootstrap/dist/css/bootstrap.css',
+  ];
+
+  return gulp.src(libraries)
+    .pipe(gulp.dest('build-app/styles/vendor'));
+});
+
 // run init tasks
 gulp.task('default', (cb) => {
-  var tasks = ['dependencies', defaultTranspilerTask(), 'html', 'less', cb];
+  var tasks = ['dependencies', 'cssDependencies',defaultTranspilerTask(), 'html', 'less', cb];
 
   return runSequence.apply(this, tasks);
 });
@@ -89,5 +99,6 @@ gulp.task('html', () => {
 gulp.task('less', () => {
   return gulp.src('dev/app/**/*.less')
     .pipe(less())
-    .pipe(gulp.dest('build-app'));
+    .pipe(concat('app.css'))
+    .pipe(gulp.dest('build-app/styles'));
 });
