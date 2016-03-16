@@ -33,6 +33,13 @@ module.exports.getPet = function *getPet(id) {
   this.status = 200;
 };
 
+module.exports.getPets = function *getPets(id) {
+  var list = yield pets.find(id);
+
+  this.body = list;
+  this.status = 200;
+};
+
 module.exports.updatePet = function *updatePet(id) {
   var petFromRequest = yield parse(this);
 

@@ -8,6 +8,7 @@ var app = module.exports = koa();
 var petRoutes = require("./petRoutes.js");
 
 app.use(routes.post("/pet", petRoutes.addPet));
+app.use(routes.get("/pets",petRoutes.getPets));
 app.use(routes.get("/pet/:id",petRoutes.getPet));
 app.use(routes.put("/pet/:id", petRoutes.updatePet));
 app.use(routes.del("/pet/:id", petRoutes.deletePet));
