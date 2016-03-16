@@ -7,8 +7,14 @@
 }
 
   .demo-app__header {
-    height: 50px;
-    padding: @padding;
+    display: flex;
+    justify-content: space-between;
+    height: 90px;
+    background-color: #0275d8;
+    align-items: baseline;
+    color: white;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
   .demo-app__main {
@@ -20,7 +26,8 @@
   .demo-app__main__add-pet {
     flex: 1 1 40%;
     padding: @padding;
-    background-color: #adadad;
+    background-color: #F1F1F1;
+    border: 1px solid dimgray;
     height: 300px;
   }
 
@@ -28,8 +35,9 @@
   .demo-app__main__pet-list {
     flex: 1 1 60%;
     padding: @padding;
-    height: 300px;
-
+    height: 100%;
+    border: 1px solid dimgray;
+    margin-left: 10px;
   }
 
 

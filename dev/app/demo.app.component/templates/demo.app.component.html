@@ -1,9 +1,20 @@
-<div class="demo-app__header"> <h1>Register Pets</h1> </div>
+<div class="demo-app__header">
+  <h1>Pets registration form</h1>
+
+  <div class="alert alert-success" role="alert" *ngIf="syncing">
+    <strong>Syncing ...</strong>
+  </div>
+
+  <div class="alert alert-warning" role="alert" *ngIf="state.networkStatus == 'offline'">
+    <strong>Working offline</strong>
+  </div>
+
+</div>
 
 <div class="demo-app__main">
 
   <div class="demo-app__main__add-pet">
-    <h2>Add pet</h2>
+    <h2>Register your pet</h2>
     <form>
       <div class="form-group">
         <label for="namePet">Name</label>
@@ -19,7 +30,7 @@
   </div>
 
   <div class="demo-app__main__pet-list">
-    <h2>Registered pets</h2>
+    <h3>Current registered pets</h3>
     {{state.networkStatus}}
     <table class="table table-condensed">
       <thead>

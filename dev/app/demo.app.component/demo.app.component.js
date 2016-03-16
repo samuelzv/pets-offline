@@ -35,36 +35,52 @@ export class DemoAppComponent {
     this._ngZone = ngZone;
 
     this.state = {};
+    this.syncing = false;
   }
 
 
   ngOnInit() {
-    // TODO extract of root reducer
-
     // we subscribe to store events
     this._appStore.subscribe(()=> {
       this._ngZone.run(() => {
         this.state = Object.assign({}, this._appStore.getState());
+        if(this.isOnline() && this.hasOfflinePets(this.state.pets)) {
+          this.syncPets();
+        }
       });
     });
 
     this.loadPets();
-
   }
 
   isOnline() {
     return this.state.networkStatus == 'offline' ? false: true;
   }
 
-  syncPets() {
-
-    this.state.pets.forEach((pet, index) => {
-      if(!pet.isSync) {
-        this.addPetOnline(pet.name, pet.kind, true);
-        // TODO return a promise to mark pet as sync
-        this._appStore.dispatch(this._petActions.markPetAsSync(index));
-      }
+  hasOfflinePets(pets) {
+    var offline = pets.filter((pet) => {
+      return pet.isSync === false;
     });
+
+    return offline.length;
+
+  }
+
+  syncPets() {
+    this.syncing = true;
+
+    setTimeout(() => {
+      this.state.pets.forEach((pet, index) => {
+        if(!pet.isSync) {
+          this.addPetOnline(pet.name, pet.kind, true);
+          // TODO return a promise to mark pet as sync
+          this._appStore.dispatch(this._petActions.markPetAsSync(index));
+        }
+    });
+    this.syncing = false;
+
+    },2000);
+
 
   }
 
