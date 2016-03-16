@@ -57,7 +57,8 @@ gulp.task('dependencies', () => {
     'node_modules/traceur/bin/traceur-runtime.js',
     'node_modules/rxjs/bundles/Rx.js',
     'node_modules/es6-shim/es6-shim.min.js',
-    'node_modules/es6-shim/es6-shim.map'
+    'node_modules/es6-shim/es6-shim.map',
+    'node_modules/redux/dist/redux.js'
   ];
 
   return gulp.src(libraries)

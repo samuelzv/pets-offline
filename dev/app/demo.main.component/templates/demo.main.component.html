@@ -5,13 +5,13 @@
     <form>
       <div class="form-group">
         <label for="namePet">Name</label>
-        <input type="text" class="form-control" id="namePet" placeholder="Name of the pet">
+        <input type="text" #petname class="form-control" id="namePet" placeholder="Name of the pet">
       </div>
        <div class="form-group">
         <label for="kindPet">Kind</label>
-        <input type="text" class="form-control" id="kindPet" placeholder="Cat, Dog, Bird, etc...">
+        <input type="text" #kind class="form-control" id="kindPet" placeholder="Cat, Dog, Bird, etc...">
       </div>
-      <button type="submit" class="btn btn-default">Register</button>
+      <button type="submit" class="btn btn-default" (click)="addPet(petname.value, kind.value)">Register</button>
     </form>
   </div>
 

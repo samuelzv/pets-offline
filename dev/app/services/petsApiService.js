@@ -5,7 +5,7 @@ import {Http, Response} from 'angular2/http';
 const API_PATH = 'http://localhost:3000/';
 
 @Injectable()
-export class PetsApi {
+export class PetsApiService {
 
   static get parameters() {
     return [[Http]];
@@ -20,6 +20,20 @@ export class PetsApi {
       .get(API_PATH + 'pet')
       .map(res => res.json())
       .share();
+  }
+
+  addPet(pet) {
+    let newPet = JSON.stringify(pet);
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+
+    return this._http
+      .post(API_PATH + 'pet', newPet, {headers: headers});
+
+      //.map(res => res.json())
+      //.share();
+
   }
 
 }

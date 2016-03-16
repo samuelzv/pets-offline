@@ -10,13 +10,17 @@ module.exports.pets = pets;
 
 module.exports.addPet = function *addPet() {
   var petFromRequest = yield parse(this);
+  var newPet = JSON.parse(petFromRequest);
+  console.dir(petFromRequest);
 
   // TODO add simple schema
+  /*
   if(!petFromRequest.name) {
     this.throw(400, "name required");
   }
+  */
 
-  var insertedPet = yield pets.insert(petFromRequest);
+  var insertedPet = yield pets.insert(newPet);
 
   this.set("location", "/pet/" + insertedPet._id);
   this.status = 200;
