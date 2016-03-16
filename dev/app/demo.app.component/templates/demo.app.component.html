@@ -25,12 +25,14 @@
         <tr>
           <th>Name</th>
           <th>Kind</th>
+          <th>Is Sync</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="#item of state.pets;">
           <td>{{item.name}}</td>
           <td>{{item.kind}}</td>
+          <td>{{item.isSync}}</td>
         </tr>
       </tbody>
     </table>

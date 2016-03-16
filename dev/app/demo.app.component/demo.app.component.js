@@ -41,6 +41,7 @@ export class DemoAppComponent {
   ngOnInit() {
     // TODO extract of root reducer
 
+    debugger;
     // we subscribe to store events
     this._appStore.subscribe(()=> {
       this._ngZone.run(() => {
@@ -52,10 +53,28 @@ export class DemoAppComponent {
 
   }
 
+  isOnline() {
+    return this.state.networkStatus == 'offline' ? false: true;
+  }
+
+
   loadPets() {
+
+    if(this.isOnline()) {
+      this.loadPetsOnline()
+    } else {
+      // It's yet in the local store, we can use it
+    }
+
+  }
+
+  loadPetsOnline() {
     // load initial pets
     this._petsApiService.getPets()
       .subscribe((data) => {
+          data.forEach( pet => {
+            pet.isSync = true;
+          });
           this._appStore.dispatch(this._petActions.loadPets(data));
         },
         (err) => {
@@ -67,6 +86,26 @@ export class DemoAppComponent {
   }
 
   addPet(petname, kind) {
+
+    if(this.isOnline()) {
+      this.addPetOnline(petname, kind);
+    } else {
+      this.addPetOffline(petname, kind);
+    }
+
+  }
+
+  addPetOffline(petname, kind) {
+    var pet = {
+      name: petname,
+      kind: kind,
+      isSync: false
+    };
+    debugger;
+    this._appStore.dispatch(this._petActions.addPet(pet));
+  }
+
+  addPetOnline(petname, kind) {
     var pet = {
       name: petname,
       kind: kind

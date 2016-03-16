@@ -4,7 +4,7 @@ import * as PetActions from '../actions/petActions';
 
 const initialState = {
   pets: [],
-  networkStatus: 'online'
+  networkStatus: navigator.onLine ? 'online' : 'offline'
 };
 
 export function rootReducer(state = initialState, action) {
@@ -20,6 +20,12 @@ export function rootReducer(state = initialState, action) {
     case PetActions.LOAD_PETS:
       return {
         pets : action.pets,
+        networkStatus: state.networkStatus
+      };
+
+    case PetActions.ADD_PET:
+      return {
+        pets: state.pets.concat(action.pet),
         networkStatus: state.networkStatus
       };
 
