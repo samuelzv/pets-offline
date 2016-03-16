@@ -48,18 +48,39 @@ export class DemoAppComponent {
       });
     });
 
+    this.loadPets();
+
+  }
+
+  loadPets() {
     // load initial pets
     this._petsApiService.getPets()
       .subscribe((data) => {
-        this._appStore.dispatch(this._petActions.loadPets(data));
-      },
-      (err) => {
-        debugger;
-      },
-      () => {
-        console.log('completed');
-      });
+          this._appStore.dispatch(this._petActions.loadPets(data));
+        },
+        (err) => {
+          debugger;
+        },
+        () => {
+          console.log('completed');
+        });
+  }
 
+  addPet(petname, kind) {
+    var pet = {
+      name: petname,
+      kind: kind
+    };
+    this._petsApiService.addPet(pet)
+      .subscribe(
+        data => {
+          console.log('Ok');
+          this.loadPets();
+        },
+        err => {
+          console.log('Error adding pet ' + err);
+        }),
+      () => console.log('Add pet ok');
   }
 
 }
