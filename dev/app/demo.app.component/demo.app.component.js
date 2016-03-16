@@ -133,6 +133,12 @@ export class DemoAppComponent {
     }
   }
 
+  clearInputs(petname, kind) {
+    debugger;
+    petname.value = '';
+    kind.value = '';
+  }
+
   addPetOnline(petname, kind, sync) {
     var pet = {
       name: petname,

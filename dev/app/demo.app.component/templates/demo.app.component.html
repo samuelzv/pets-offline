@@ -24,8 +24,7 @@
         <label for="kindPet">Kind</label>
         <input type="text" #kind class="form-control" id="kindPet" placeholder="Cat, Dog, Bird, etc...">
       </div>
-      <button type="submit" class="btn btn-default" (click)="addPet(petname.value, kind.value)">Register</button>
-      <button type="button" class="btn btn-default" (click)="syncPets()">Sync pets</button>
+      <button type="submit" class="btn btn-default" (click)="addPet(petname.value, kind.value);clearInputs(petname, kind)">Register</button>
     </form>
   </div>
 
