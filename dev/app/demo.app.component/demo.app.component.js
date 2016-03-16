@@ -1,7 +1,7 @@
 import {Component, provide, View, NgZone} from 'angular2/core';
 import {AppStore, appStore} from '../stores/appStore';
 //import {DemoMainComponent} from '../demo.main.component/demo.main.component';
-import {DemoHeaderComponent} from '../demo.header.component/demo.header.component';
+//import {DemoHeaderComponent} from '../demo.header.component/demo.header.component';
 import {PetsApiService} from '../services/petsApiService';
 import {NetworkStatusService} from '../services/networkStatusService';
 import {NetworkStatusDispatcher} from '../services/networkStatusDispatcher';
@@ -9,7 +9,7 @@ import {NetworkStatusActions} from '../actions/networkStatusActions';
 import {PetActions} from '../actions/petActions';
 
 @Component({
-  directives:[/*DemoMainComponent,*/ DemoHeaderComponent],
+  directives:[/*DemoMainComponent, DemoHeaderComponent*/],
   selector: 'demo-app',
   providers: [provide(AppStore, {useValue: appStore}), PetsApiService, NetworkStatusService,
     NetworkStatusDispatcher, NetworkStatusActions, PetActions ],
@@ -41,7 +41,6 @@ export class DemoAppComponent {
   ngOnInit() {
     // TODO extract of root reducer
 
-    debugger;
     // we subscribe to store events
     this._appStore.subscribe(()=> {
       this._ngZone.run(() => {
@@ -55,6 +54,18 @@ export class DemoAppComponent {
 
   isOnline() {
     return this.state.networkStatus == 'offline' ? false: true;
+  }
+
+  syncPets() {
+
+    this.state.pets.forEach((pet, index) => {
+      if(!pet.isSync) {
+        this.addPetOnline(pet.name, pet.kind, true);
+        // TODO return a promise to mark pet as sync
+        this._appStore.dispatch(this._petActions.markPetAsSync(index));
+      }
+    });
+
   }
 
 
@@ -78,34 +89,35 @@ export class DemoAppComponent {
           this._appStore.dispatch(this._petActions.loadPets(data));
         },
         (err) => {
-          debugger;
+          console.log('Error loading online pets');
         },
         () => {
-          console.log('completed');
+          console.log('completed loading online pets');
         });
   }
 
-  addPet(petname, kind) {
+  addPet(petname, kind, sync=false) {
 
     if(this.isOnline()) {
-      this.addPetOnline(petname, kind);
+      this.addPetOnline(petname, kind, sync);
     } else {
-      this.addPetOffline(petname, kind);
+      this.addPetOffline(petname, kind, sync);
     }
 
   }
 
-  addPetOffline(petname, kind) {
+  addPetOffline(petname, kind, sync) {
     var pet = {
       name: petname,
       kind: kind,
       isSync: false
     };
-    debugger;
-    this._appStore.dispatch(this._petActions.addPet(pet));
+    if(!sync) {
+      this._appStore.dispatch(this._petActions.addPet(pet));
+    }
   }
 
-  addPetOnline(petname, kind) {
+  addPetOnline(petname, kind, sync) {
     var pet = {
       name: petname,
       kind: kind
@@ -114,7 +126,9 @@ export class DemoAppComponent {
       .subscribe(
         data => {
           console.log('Ok');
-          this.loadPets();
+          if(!sync) {
+            this.loadPets();
+          }
         },
         err => {
           console.log('Error adding pet ' + err);

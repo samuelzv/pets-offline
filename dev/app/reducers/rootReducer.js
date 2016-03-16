@@ -29,6 +29,15 @@ export function rootReducer(state = initialState, action) {
         networkStatus: state.networkStatus
       };
 
+    case PetActions.MARK_PET_AS_SYNC:
+      debugger;
+      var pets = state.pets.concat();
+      pets[action.index].isSync = true;
+      return {
+        pets: pets,
+        networkStatus: state.networkStatus
+      };
+
 
     default:
       return state;
