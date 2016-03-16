@@ -15,8 +15,9 @@ app.use(routes.del("/pet/:id", petRoutes.deletePet));
 
 
 app.use(serve(__dirname + '/../../build-app'));
-app.listen(3000);
-console.log('Koa listening on port 3000');
+var port = process.env.PORT || 3000;
+app.listen(port);
+console.log('Koa listening on port ' + port);
 
 
 
