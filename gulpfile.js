@@ -58,7 +58,8 @@ gulp.task('dependencies', () => {
     'node_modules/rxjs/bundles/Rx.js',
     'node_modules/es6-shim/es6-shim.min.js',
     'node_modules/es6-shim/es6-shim.map',
-    'node_modules/redux/dist/redux.js'
+    'node_modules/redux/dist/redux.js',
+    'node_modules/node-uuid/uuid.js'
   ];
 
   return gulp.src(libraries)

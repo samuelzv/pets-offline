@@ -1,38 +1,35 @@
 import {Component, provide, View, NgZone} from 'angular2/core';
 import {AppStore, appStore} from '../stores/appStore';
-//import {DemoMainComponent} from '../demo.main.component/demo.main.component';
-//import {DemoHeaderComponent} from '../demo.header.component/demo.header.component';
-import {PetsApiService} from '../services/petsApiService';
 import {NetworkStatusService} from '../services/networkStatusService';
 import {NetworkStatusDispatcher} from '../services/networkStatusDispatcher';
 import {NetworkStatusActions} from '../actions/networkStatusActions';
 import {PetActions} from '../actions/petActions';
+import {PetsService} from '../services/PetsService';
+import {PetsServiceOnline} from '../services/PetsServiceOnline';
+import {PetsServiceOffline} from '../services/PetsServiceOffline';
 
 @Component({
-  directives:[/*DemoMainComponent, DemoHeaderComponent*/],
+  directives:[],
   selector: 'demo-app',
-  providers: [provide(AppStore, {useValue: appStore}), PetsApiService, NetworkStatusService,
-    NetworkStatusDispatcher, NetworkStatusActions, PetActions ],
-  templateUrl: './demo.app.component/templates/demo.app.component.html' /*,
-  template: `
-    <div class="demo-app__header"> <h1>Register Pets</h1> </div>
-    <demo-main></demo-main>
-  ` */
+  providers: [provide(AppStore, {useValue: appStore}),  NetworkStatusService,
+    NetworkStatusDispatcher, NetworkStatusActions, PetActions, PetsService, PetsServiceOnline, PetsServiceOffline ],
+  templateUrl: './demo.app.component/templates/demo.app.component.html'
 })
 
 export class DemoAppComponent {
 
   static get parameters() {
-    return [ [AppStore], [PetsApiService], [NetworkStatusService], [NetworkStatusDispatcher], [PetActions], [NgZone] ];
+    return [ [AppStore],  [NetworkStatusService], [NetworkStatusDispatcher], [PetActions], [NgZone], [PetsService] ];
   }
 
-  constructor(appStore, petsApiService, networkStatusServices, networkStatusDispatcher, petActions, ngZone ) {
+  constructor(appStore,  networkStatusServices, networkStatusDispatcher, petActions, ngZone, petsService ) {
     this._appStore = appStore;
-    this._petsApiService = petsApiService;
     this._networkStatusServices = networkStatusServices;
     this._networkStatusDispatcher = networkStatusDispatcher;
     this._petActions = petActions;
     this._ngZone = ngZone;
+    this._petsService = petsService;
+
 
     this.state = {};
     this.syncing = false;
@@ -44,7 +41,8 @@ export class DemoAppComponent {
     this._appStore.subscribe(()=> {
       this._ngZone.run(() => {
         this.state = Object.assign({}, this._appStore.getState());
-        if(this.isOnline() && this.hasOfflinePets(this.state.pets)) {
+        debugger;
+        if(this.isOnline() && this._petsService.hasOfflineItems() ) {
           this.syncPets();
         }
       });
@@ -57,105 +55,40 @@ export class DemoAppComponent {
     return this.state.networkStatus == 'offline' ? false: true;
   }
 
-  hasOfflinePets(pets) {
-    var offline = pets.filter((pet) => {
-      return pet.isSync === false;
-    });
-
-    return offline.length;
-
-  }
-
   syncPets() {
     this.syncing = true;
 
     setTimeout(() => {
-      this.state.pets.forEach((pet, index) => {
-        if(!pet.isSync) {
-          this.addPetOnline(pet.name, pet.kind, true);
-          // TODO return a promise to mark pet as sync
-          this._appStore.dispatch(this._petActions.markPetAsSync(index));
-        }
-    });
-    this.syncing = false;
-
+      this._petsService.sync();
+      this.syncing = false;
     },2000);
-
-
   }
-
 
   loadPets() {
-
-    if(this.isOnline()) {
-      this.loadPetsOnline()
-    } else {
-      // It's yet in the local store, we can use it
-    }
-
-  }
-
-  loadPetsOnline() {
-    // load initial pets
-    this._petsApiService.getPets()
-      .subscribe((data) => {
-          data.forEach( pet => {
-            pet.isSync = true;
-          });
+    this._petsService.getAll()
+        .subscribe((data) => {
           this._appStore.dispatch(this._petActions.loadPets(data));
-        },
-        (err) => {
-          console.log('Error loading online pets');
-        },
-        () => {
-          console.log('completed loading online pets');
         });
   }
 
-  addPet(petname, kind, sync=false) {
-
-    if(this.isOnline()) {
-      this.addPetOnline(petname, kind, sync);
-    } else {
-      this.addPetOffline(petname, kind, sync);
-    }
-
-  }
-
-  addPetOffline(petname, kind, sync) {
-    var pet = {
-      name: petname,
-      kind: kind,
-      isSync: false
+  addPet(name, kind) {
+    let postAdd = (res) => {
+      debugger;
+      if(res.isRemoteOperation) {
+        this.loadPets();
+      }
     };
-    if(!sync) {
-      this._appStore.dispatch(this._petActions.addPet(pet));
-    }
+
+    this._petsService.add({name, kind})
+      .subscribe(postAdd,
+                 err => console.log('Error:' + err));
   }
+
 
   clearInputs(petname, kind) {
-    debugger;
     petname.value = '';
     kind.value = '';
   }
 
-  addPetOnline(petname, kind, sync) {
-    var pet = {
-      name: petname,
-      kind: kind
-    };
-    this._petsApiService.addPet(pet)
-      .subscribe(
-        data => {
-          console.log('Ok');
-          if(!sync) {
-            this.loadPets();
-          }
-        },
-        err => {
-          console.log('Error adding pet ' + err);
-        }),
-      () => console.log('Add pet ok');
-  }
 
 }

@@ -30,7 +30,6 @@
 
   <div class="demo-app__main__pet-list">
     <h3>Current registered pets</h3>
-    {{state.networkStatus}}
     <table class="table table-condensed">
       <thead>
         <tr>
@@ -43,7 +42,7 @@
         <tr *ngFor="#item of state.pets;">
           <td>{{item.name}}</td>
           <td>{{item.kind}}</td>
-          <td>{{item.isSync}}</td>
+          <td>{{item.metadata.isSync}}</td>
         </tr>
       </tbody>
     </table>

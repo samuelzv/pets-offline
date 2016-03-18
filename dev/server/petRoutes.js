@@ -22,7 +22,8 @@ module.exports.addPet = function *addPet() {
 
   var insertedPet = yield pets.insert(newPet);
 
-  this.set("location", "/pet/" + insertedPet._id);
+  //this.set("location", "/pet/" + insertedPet._id);
+  this.body = insertedPet;
   this.status = 200;
 };
 

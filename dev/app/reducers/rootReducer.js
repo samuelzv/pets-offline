@@ -30,9 +30,8 @@ export function rootReducer(state = initialState, action) {
       };
 
     case PetActions.MARK_PET_AS_SYNC:
-      debugger;
       var pets = state.pets.concat();
-      pets[action.index].isSync = true;
+      pets[action.index].metadata.isSync = true;
       return {
         pets: pets,
         networkStatus: state.networkStatus
