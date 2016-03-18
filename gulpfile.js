@@ -2,6 +2,7 @@ var gulp = require('gulp'),
     rename = require('gulp-rename'),
     path= require('path'),
     concat = require('gulp-concat'),
+    manifest = require('gulp-appcache'),
     inject = require('gulp-inject-string'),
     less = require('gulp-less'),
     traceur = require('gulp-traceur'),
@@ -26,7 +27,7 @@ gulp.task('cssDependencies', () => {
 
 // run init tasks
 gulp.task('default', (cb) => {
-  var tasks = ['dependencies', 'cssDependencies',defaultTranspilerTask(), 'html', 'less', cb];
+  var tasks = ['dependencies', 'cssDependencies',defaultTranspilerTask(), 'html', 'less', 'manifest', cb];
 
   return runSequence.apply(this, tasks);
 });
@@ -59,7 +60,8 @@ gulp.task('dependencies', () => {
     'node_modules/es6-shim/es6-shim.min.js',
     'node_modules/es6-shim/es6-shim.map',
     'node_modules/redux/dist/redux.js',
-    'node_modules/node-uuid/uuid.js'
+    'node_modules/node-uuid/uuid.js',
+    'node_modules/localforage/dist/localforage.js'
   ];
 
   return gulp.src(libraries)
@@ -104,4 +106,17 @@ gulp.task('less', () => {
     .pipe(less())
     .pipe(concat('app.css'))
     .pipe(gulp.dest('build-app/styles'));
+});
+
+gulp.task('manifest', function(){
+  gulp.src(['build-app/**/*'])
+    .pipe(manifest({
+      relativePath: '',
+      hash: true,
+      preferOnline: true,
+      network: ['http://*', 'https://*', '*'],
+      filename: 'app.manifest',
+      exclude: 'app.manifest'
+    }))
+    .pipe(gulp.dest('build-app'));
 });

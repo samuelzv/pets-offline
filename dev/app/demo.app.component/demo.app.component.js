@@ -7,28 +7,30 @@ import {PetActions} from '../actions/petActions';
 import {PetsService} from '../services/PetsService';
 import {PetsServiceOnline} from '../services/PetsServiceOnline';
 import {PetsServiceOffline} from '../services/PetsServiceOffline';
+import {OfflineStorage} from '../services/OfflineStorage';
 
 @Component({
   directives:[],
   selector: 'demo-app',
   providers: [provide(AppStore, {useValue: appStore}),  NetworkStatusService,
-    NetworkStatusDispatcher, NetworkStatusActions, PetActions, PetsService, PetsServiceOnline, PetsServiceOffline ],
+    NetworkStatusDispatcher, NetworkStatusActions, PetActions, PetsService, PetsServiceOnline, PetsServiceOffline, OfflineStorage ],
   templateUrl: './demo.app.component/templates/demo.app.component.html'
 })
 
 export class DemoAppComponent {
 
   static get parameters() {
-    return [ [AppStore],  [NetworkStatusService], [NetworkStatusDispatcher], [PetActions], [NgZone], [PetsService] ];
+    return [ [AppStore],  [NetworkStatusService], [NetworkStatusDispatcher], [PetActions], [NgZone], [PetsService], [OfflineStorage] ];
   }
 
-  constructor(appStore,  networkStatusServices, networkStatusDispatcher, petActions, ngZone, petsService ) {
+  constructor(appStore,  networkStatusServices, networkStatusDispatcher, petActions, ngZone, petsService, offlineStorage ) {
     this._appStore = appStore;
     this._networkStatusServices = networkStatusServices;
     this._networkStatusDispatcher = networkStatusDispatcher;
     this._petActions = petActions;
     this._ngZone = ngZone;
     this._petsService = petsService;
+    this._offlineStorage = offlineStorage;
 
 
     this.state = {};
@@ -88,6 +90,15 @@ export class DemoAppComponent {
   clearInputs(petname, kind) {
     petname.value = '';
     kind.value = '';
+  }
+
+  persistToOfflineStorage() {
+    this._offlineStorage.persist();
+    alert('persisting');
+  }
+
+  getPersistedData() {
+    this._offlineStorage.getPersistedData();
   }
 
 

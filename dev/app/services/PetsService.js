@@ -70,21 +70,6 @@ export class PetsService {
   getAll() {
     var subject = new ReplaySubject(1);
 
-    /*
-  .map(res => {
-      // mark as sync
-      var items = res.json();
-      items.forEach((item)  => {
-        item.metadata = {
-          isSync: true,
-          id: getNewId()
-        };
-      });
-
-      return items;
-    })
-    */
-
     this._pets.getAll()
       .subscribe((items) => {
         debugger;

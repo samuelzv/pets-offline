@@ -25,6 +25,8 @@
         <input type="text" #kind class="form-control" id="kindPet" placeholder="Cat, Dog, Bird, etc...">
       </div>
       <button type="submit" class="btn btn-default" (click)="addPet(petname.value, kind.value);clearInputs(petname, kind)">Register</button>
+      <button type="button" class="btn btn-default" (click)="persistToOfflineStorage()">Persist data</button>
+      <button type="button" class="btn btn-default" (click)="getPersistedData()">Get persist data</button>
     </form>
   </div>
 
